@@ -53,7 +53,7 @@ widgets:
       configured-columns: {}
       row-numbers-enabled: false
     visualization: table-view
-    title: Intel Details
+    title: Intel details
     isLive: false
     type: query
   219afb67-097d-4b69-a954-7a58801befab:
@@ -102,7 +102,7 @@ widgets:
       yAxisTitle: ''
       stacking: none
     visualization: time-chart
-    title: Intel Logs Over Time ("Additional Filter", "Indicator Type" filters do
+    title: Intel logs over time ("Additional filter", "Indicator type" filters do
       not apply)
     isLive: false
     type: query
@@ -133,9 +133,9 @@ widgets:
     interactions:
     - name: Details of indicators
       titleTemplate: Details of {{ fields.Vendor.seen.indicator_type }}
-      queryString: "#Vendor = corelight and #event.module =ndr and @event_parsed!=\"false\"\n| #event.dataset\
-        \ = ndr.intel\n| in(field=\"observer.hostname\", values=[?system_name])\n| ?additional_filter and\
-        \ Vendor.seen.indicator_type=?indicator_type\n| source.ip=?filter or destination.ip=?filter\
+      queryString: "#Vendor = corelight and #event.module =ndr\n| #event.dataset =\
+        \ ndr.intel\n| in(field=observer.hostname, values=[?system_name])\n| ?additional_filter\
+        \ and Vendor.seen.indicator_type=?indicator_type\n| source.ip=?filter or destination.ip=?filter\
         \ or destination.port=?filter or Vendor.seen.indicator=?filter\n| Vendor.seen.indicator_type=?chart_indicator_type "
       useWidgetTimeWindow: true
       arguments:
@@ -179,7 +179,7 @@ widgets:
       configured-columns: {}
       row-numbers-enabled: false
     visualization: table-view
-    title: Log Data
+    title: Log data
     isLive: false
     type: query
 $schema: https://schemas.humio.com/dashboard/v0.17.0
