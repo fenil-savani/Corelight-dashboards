@@ -17,6 +17,7 @@ sharedTimeInterval:
   start: 1d
 labels:
 - Corelight
+- Security Workflow
 widgets:
   db49998f-ca73-4148-9c36-ee5208ff1424:
     x: 0
@@ -334,7 +335,7 @@ widgets:
     title: Unique rules alerting
     isLive: false
     type: query
-$schema: https://schemas.humio.com/dashboard/v0.17.0
+$schema: https://schemas.humio.com/dashboard/v0.20.0
 parameters:
   alert_severity:
     label: Severity
