@@ -363,7 +363,7 @@ parameters:
     order: 3
     valueField: Vendor.alert.category
   source_ip:
-    label: Source IP
+    label: Source ip
     order: 1
     type: text
     defaultValue: '*'
@@ -375,7 +375,7 @@ parameters:
     defaultValue: '*'
     width: 3
   system_name:
-    label: Corelight Sensor
+    label: Corelight sensor
     query: |-
       #Vendor = corelight and #event.module = ndr
       | groupBy([observer.hostname], function=[])
