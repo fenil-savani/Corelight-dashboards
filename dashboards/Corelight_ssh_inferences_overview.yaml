@@ -54,7 +54,7 @@ widgets:
     y: 10
     interactions:
     - name: Details of Inferences for Hosts with Host Key
-      titleTemplate: 'Details of Source IP : {{ fields["Source IP"] }} and Destination
+      titleTemplate: 'Details of source IP : {{ fields["Source IP"] }} and destination
         IP : {{ fields["Destination IP"] }}'
       queryString: |-
         #Vendor = corelight and #event.module = ndr
@@ -270,7 +270,7 @@ widgets:
     y: 5
     interactions:
     - name: Details of SSH Host
-      titleTemplate: 'Details of Source IP : {{ fields["Source IP"] }} and Destination
+      titleTemplate: 'Details of source IP : {{ fields["Source IP"] }} and destination
         IP : {{ fields["Destination IP"] }}'
       queryString: |-
         #Vendor = corelight and #event.module = ndr
@@ -326,7 +326,7 @@ widgets:
     y: 5
     interactions:
     - name: Details of HASSH Fingerprint
-      titleTemplate: 'Details of Source IP : {{ fields["Source IP"] }} and Destination
+      titleTemplate: 'Details of source IP : {{ fields["Source IP"] }} and destination
         IP : {{ fields["Destination IP"] }}'
       queryString: |-
         #Vendor = corelight and #event.module = ndr

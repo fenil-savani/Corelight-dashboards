@@ -11,6 +11,7 @@ labels:
 widgets:
   df3035d2-752f-4ed3-9437-17ea68d0b140:
     x: 0
+    description: (Additional filter or severity does not apply.)
     height: 4
     queryString: |-
       #Vendor = corelight and #event.module =ndr
@@ -58,7 +59,7 @@ widgets:
       yAxisTitle: ''
       stacking: none
     visualization: time-chart
-    title: Notices over time (Additional filter or severity does not apply.)
+    title: Notices over time
     isLive: false
     type: query
   f4cc09b0-eeaf-4419-8495-567324f7a63f:

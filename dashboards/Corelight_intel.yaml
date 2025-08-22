@@ -18,7 +18,7 @@ widgets:
       | in(field=observer.hostname, values=[?system_name])
       | ?{additional_filter=*} and Vendor.seen.indicator_type=?{indicator_type=*}
       | source.ip=?{filter=*} or destination.ip=?{filter=*} or destination.port=?{filter=*} or Vendor.seen.indicator=?{filter=*}
-      | top([source.ip, destination.ip, destination.port, Vendor.seen.indicator_type, Vendor.seen.indicator, Vendor.seen.where], limit=5, as="Total Events")
+      | top([source.ip, destination.ip, destination.port, Vendor.seen.indicator_type, Vendor.seen.indicator, Vendor.seen.where], limit=100, as="Total Events")
       | rename([[source.ip, "Source IP"], [destination.ip, "Destination IP"], [destination.port, "Port"], [Vendor.seen.indicator_type, "Indicator Type"], [Vendor.seen.indicator, Indicator], [Vendor.seen.where, Where]])
     end: now
     start: 'calendar: now@y'
@@ -58,6 +58,7 @@ widgets:
     type: query
   219afb67-097d-4b69-a954-7a58801befab:
     x: 0
+    description: ' ("Additional filter", "Indicator type" filters do not apply)'
     height: 5
     queryString: |-
       #Vendor = corelight and #event.module =ndr
@@ -71,7 +72,7 @@ widgets:
     y: 1
     interactions:
     - name: Details of intel logs over time
-      titleTemplate: Details of Intel Data
+      titleTemplate: Details of intel data
       queryString: |-
         #Vendor = corelight and #event.module =ndr
         | #event.dataset = ndr.intel
@@ -102,8 +103,7 @@ widgets:
       yAxisTitle: ''
       stacking: none
     visualization: time-chart
-    title: Intel logs over time ("Additional filter", "Indicator type" filters do
-      not apply)
+    title: Intel logs over time
     isLive: false
     type: query
   note-1734437563042-0:

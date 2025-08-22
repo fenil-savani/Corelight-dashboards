@@ -82,7 +82,7 @@ widgets:
     y: 5
     interactions:
     - name: Details of Failed Connections
-      titleTemplate: Details of Failed Connections
+      titleTemplate: Details of failed connections
       queryString: |
         #Vendor = corelight and #event.module = ndr
         | #event.dataset = ndr.rdp
@@ -174,7 +174,7 @@ widgets:
     y: 5
     interactions:
     - name: Details of Successful Connections
-      titleTemplate: Details of Successful Connections
+      titleTemplate: Details of successful connections
       queryString: |-
         #Vendor = corelight and #event.module = ndr
         | #event.dataset = ndr.rdp
@@ -295,7 +295,7 @@ widgets:
     y: 5
     interactions:
     - name: Details of Connecting Users
-      titleTemplate: Details of User '{{ fields["Connecting User"] }}' and Auth Success
+      titleTemplate: Details of user '{{ fields["Connecting User"] }}' and auth success
         '{{ fields["Auth Success"] }}'
       queryString: "#Vendor = corelight and #event.module = ndr\n| #event.dataset\
         \ = ndr.rdp\n| in(field=observer.hostname, values=[?system_name])  \n| ?additional_filter\n\

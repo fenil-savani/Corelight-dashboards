@@ -234,7 +234,7 @@ widgets:
     y: 1
     interactions:
     - name: Details of Total IDS Hits
-      titleTemplate: Details of Total IDS Hits
+      titleTemplate: Details of total IDS hits
       queryString: |
         #Vendor = corelight and #event.module = ndr
         | in(field=#event.dataset, values=[ndr.suricata_corelight,ndr.suricata_corelight_hec])
@@ -275,7 +275,7 @@ widgets:
     y: 4
     interactions:
     - name: Details of Total IDS Hits
-      titleTemplate: Details of Total IDS Hits
+      titleTemplate: Details of total IDS hits
       queryString: |
         #Vendor = corelight and #event.module = ndr
         | in(field=#event.dataset, values=[ndr.suricata_corelight,ndr.suricata_corelight_hec])
@@ -312,7 +312,7 @@ widgets:
     y: 4
     interactions:
     - name: Details of Events with Alerting Rules
-      titleTemplate: Details of Events with Alerting Rules
+      titleTemplate: Details of events with alerting rules
       queryString: |-
         #Vendor = corelight and #event.module = ndr
         | in(field=#event.dataset, values=[ndr.suricata_corelight,ndr.suricata_corelight_hec])
