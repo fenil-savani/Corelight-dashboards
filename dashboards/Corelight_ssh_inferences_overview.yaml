@@ -17,33 +17,14 @@ widgets:
       #Vendor = corelight and #event.module = ndr
       | in(field=#event.dataset, values=[ndr.ssh,ndr.ssh_red])
       | in(field=observer.hostname, values=[?system_name])
-      | ?{additional_filter=*}
-      | inference_filter := ?{inferences=*}
-      | case {
-          !text:contains(string=inference_filter, substring="*") |
-          array:contains(array="Vendor.inferences[]", value=?{inferences=*});
-          text:contains(string=inference_filter, substring="*") | *
-      }
       | default(field=[source.ip,destination.ip],value=unknown)
-      | top([source.ip,destination.ip], as=Count, limit=20000)
-      | join(query={
-                #Vendor = corelight and #event.module = ndr
-                | in(field=#event.dataset, values=[ndr.ssh,ndr.ssh_red])
-                | in(field=observer.hostname, values=[?system_name])
-                | default(field=[source.ip,destination.ip],value=unknown)
-                | ?{additional_filter=*}
-                | array:reduceAll(array="Vendor.inferences[]", function=[groupBy(inferences, function=tail(limit=max), limit=max)], var="inferences")
-                | inferences=?{inferences=*}
-                | match(file="ssh_inference_lookup.csv", include=[InferenceName], column=inferences, field=inferences)
-                | format("%s:%s",field=[inferences,InferenceName],as=Inferences)
-                | groupBy([source.ip,destination.ip],function=[collect([Inferences], separator="\n"),collect([Vendor.host_key], separator="\n")])
-                | default(value="unknown", field=[Vendor.host_key])
-              },
-              include=[Inferences,Vendor.host_key],
-              field=[source.ip,destination.ip],
-              key=[source.ip,destination.ip],
-              mode=left,
-              limit=200000)
+      | ?{additional_filter=*}
+      | array:reduceAll(array="Vendor.inferences[]", function=[groupBy(inferences, function=tail(limit=max), limit=max)], var="inferences")
+      | inferences=?{inferences=*}
+      | match(file="corelight_ssh_inference_lookup.csv", include=[InferenceName], column=inferences, field=inferences)
+      | format("%s:%s",field=[inferences,InferenceName],as=Inferences)
+      | groupBy([source.ip,destination.ip],function=[collect([Inferences], separator="\n"),collect([Vendor.host_key], separator="\n"), count(@timestamp, distinct=true)])
+      | default(value="unknown", field=[Vendor.host_key])
       | sort(_count,limit=max)
       | default(value="unknown", field=[Inferences])
       | rename([[source.ip, "Source IP"],[destination.ip,"Destination IP"],[_count,Count],[Vendor.host_key,"Host Key"]])
@@ -234,33 +215,14 @@ widgets:
       #Vendor = corelight and #event.module = ndr
       | in(field=#event.dataset, values=[ndr.ssh,ndr.ssh_red])
       | in(field=observer.hostname, values=[?system_name])
-      | ?{additional_filter=*}
-      | inference_filter := ?{inferences=*}
-      | case {
-          !text:contains(string=inference_filter, substring="*") |
-          array:contains(array="Vendor.inferences[]", value=?{inferences=*});
-          text:contains(string=inference_filter, substring="*") | *
-      }
       | default(field=[source.ip,destination.ip],value=unknown)
-      | top([source.ip,destination.ip], as=Count, limit=5)
-      | join(query={
-                #Vendor = corelight and #event.module = ndr
-                | in(field=#event.dataset, values=[ndr.ssh,ndr.ssh_red])
-                | in(field=observer.hostname, values=[?system_name])
-                | default(field=[source.ip,destination.ip],value=unknown)
-                | ?{additional_filter=*}
-                | array:reduceAll(array="Vendor.inferences[]", function=[groupBy(inferences, function=tail(limit=max), limit=max)], var="inferences")
-                | inferences=?{inferences=*}
-                | match(file="ssh_inference_lookup.csv", include=[InferenceName], column=inferences, field=inferences)
-                | format("%s:%s",field=[inferences,InferenceName],as=Inferences)
-                | groupBy([source.ip,destination.ip],function=[collect([Inferences], separator="\n")])
-              },
-              include=[Inferences], 
-              field=[source.ip,destination.ip], 
-              key=[source.ip,destination.ip],
-              mode=left,
-              limit=200000)
-      | sort(_count, limit=max)
+      | ?{additional_filter=*}
+      | array:reduceAll(array="Vendor.inferences[]", function=[groupBy(inferences, function=tail(limit=max), limit=max)], var="inferences")
+      | inferences=?{inferences=*}
+      | match(file="corelight_ssh_inference_lookup.csv", include=[InferenceName], column=inferences, field=inferences)
+      | format("%s:%s",field=[inferences,InferenceName],as=Inferences)
+      | groupBy([source.ip,destination.ip],function=[collect([Inferences], separator="\n"), count(@timestamp, distinct=true)])
+      | sort(_count,limit=max)
       | default(value="unknown", field=[Inferences])
       | rename([[source.ip, "Source IP"],[destination.ip,"Destination IP"],[_count,Count]])
       | select(["Source IP","Destination IP",Inferences,Count])
