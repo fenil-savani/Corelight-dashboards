@@ -178,13 +178,12 @@ widgets:
       | source.ip=?{source_ip=*} AND Vendor.alert.severity=?{alert_severity=*} AND Vendor.alert.category=?{category=*} AND event.id=*
       | Vendor.alert.signature_id = ?{sid=*}
       | sort(Vendor.ts,limit=max)
-      | rename(field=Vendor.ts, as="Time")
-      | select(["Time",source.ip,destination.ip,destination.port,network.protocol,Vendor.alert.severity,Vendor.alert.signature,Vendor.alert.signature_id,event.id])
+      | select(["Vendor.ts",source.ip,destination.ip,destination.port,network.protocol,Vendor.alert.severity,Vendor.alert.signature,Vendor.alert.signature_id,event.id])
       | replace("0",with=Informational,field=Vendor.alert.severity)
       | replace("1",with=Critical,field=Vendor.alert.severity)
       | replace("2",with=Medium,field=Vendor.alert.severity)
       | replace("3",with=Low,field=Vendor.alert.severity)
-      | rename([[Vendor.alert.severity,Severity],[Vendor.alert.signature,Signature],[Vendor.alert.signature_id,SID],[event.id,"Session ID"],[source.ip,"Source IP"],[destination.ip,"Destination IP"],[destination.port,"Destination Port"],[network.protocol,Service]])
+      | rename([[Vendor.ts,"Time"],[Vendor.alert.severity,Severity],[Vendor.alert.signature,Signature],[Vendor.alert.signature_id,SID],[event.id,"Session ID"],[source.ip,"Source IP"],[destination.ip,"Destination IP"],[destination.port,"Destination Port"],[network.protocol,Service]])
     end: now
     start: 1d
     width: 12

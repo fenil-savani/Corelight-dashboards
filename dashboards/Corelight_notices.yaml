@@ -255,7 +255,6 @@ parameters:
       | Vendor.note=*
       | in(field=observer.hostname, values=[?system_name])
       | top([Vendor.note], limit=100)
-      | drop([_count])
     timeInterval: 24h
     useDashboardTimeIfSet: true
     type: query

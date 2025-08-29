@@ -19,7 +19,7 @@ widgets:
       | ?{additional_filter=*} and Vendor.seen.indicator_type=?{indicator_type=*}
       | source.ip=?{filter=*} or destination.ip=?{filter=*} or destination.port=?{filter=*} or Vendor.seen.indicator=?{filter=*}
       | top([source.ip, destination.ip, destination.port, Vendor.seen.indicator_type, Vendor.seen.indicator, Vendor.seen.where], limit=100, as="Total Events")
-      | rename([[source.ip, "Source IP"], [destination.ip, "Destination IP"], [destination.port, "Port"], [Vendor.seen.indicator_type, "Indicator Type"], [Vendor.seen.indicator, Indicator], [Vendor.seen.where, Where]])
+      | rename([[source.ip, "Source IP"], [destination.ip, "Destination IP"], [destination.port, "Destination Port"], [Vendor.seen.indicator_type, "Indicator Type"], [Vendor.seen.indicator, Indicator], [Vendor.seen.where, Where]])
     end: now
     start: 'calendar: now@y'
     width: 12
@@ -169,8 +169,8 @@ widgets:
       | ?{additional_filter=*} and Vendor.seen.indicator_type=?{indicator_type=*}
       | source.ip=?{filter=*} or destination.ip=?{filter=*} or destination.port=?{filter=*} or Vendor.seen.indicator=?{filter=*}
       | formatTime(format="%F %r", as="Time")
-      | rename([[source.ip, "Source IP"], [destination.ip, "Destination IP"], [destination.port, "Port"], [@rawstring, "Raw Data"]])
-      | select(["Time", "Source IP", "Destination IP", Port, "Raw Data"])
+      | rename([[source.ip, "Source IP"], [destination.ip, "Destination IP"], [destination.port, "Destination Port"], [@rawstring, "Raw Data"]])
+      | select(["Time", "Source IP", "Destination IP", "Destination Port", "Raw Data"])
     end: now
     start: 'calendar: now@y'
     width: 12

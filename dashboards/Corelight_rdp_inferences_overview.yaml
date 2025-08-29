@@ -74,7 +74,7 @@ widgets:
       | #event.dataset = ndr.rdp
       | in(field=observer.hostname, values=[?system_name])
       | ?{additional_filter=*}
-      | Vendor.auth_success != /true/i
+      | event.outcome != /true/i
       | count()
     end: now
     start: 1d
@@ -88,7 +88,7 @@ widgets:
         | #event.dataset = ndr.rdp
         | in(field=observer.hostname, values=[?system_name])
         | ?additional_filter
-        | Vendor.auth_success != /true/i
+        | event.outcome != /true/i
       useWidgetTimeWindow: true
       arguments:
         additional_filter: '["{{ parameters.additional_filter }}"]'
@@ -166,7 +166,7 @@ widgets:
       | #event.dataset = ndr.rdp
       | in(field=observer.hostname, values=[?system_name])
       | ?{additional_filter=*}
-      | Vendor.auth_success = /true/i
+      | event.outcome = /true/i
       | count()
     end: now
     start: 1d
@@ -180,7 +180,7 @@ widgets:
         | #event.dataset = ndr.rdp
         | in(field=observer.hostname, values=[?system_name])
         | ?additional_filter
-        | Vendor.auth_success = /true/i
+        | event.outcome = /true/i
       useWidgetTimeWindow: true
       arguments:
         additional_filter: '["{{ parameters.additional_filter }}"]'
@@ -219,10 +219,9 @@ widgets:
       | in(field=observer.hostname, values=[?system_name])
       | ?{additional_filter=*}
       | array:reduceAll(array="Vendor.inferences[]", function=[groupBy(inferences, function=tail(limit=max), limit=max)], var="inferences")
-      | groupBy([@timestamp,sensor_name,user.name,source.ip,destination.ip,destination.port,Vendor.auth_success,inferences,@rawstring], limit=max)
-      | rename([[inferences, Code]])
-      | lookup(from=corelight_inferences_description.csv, on=Code,include=Name)
-      | rename([["Code","Inference"],[user.name, "User Name"],[sensor_name,"Corelight Sensor"],[source.ip,"Source IP"],[destination.ip,"Destination IP"],[destination.port,"Destination Port"],[Vendor.auth_success,"Auth Success"],[@rawstring,"Raw Logs"], [Name, "Inference Name"]])
+      | groupBy([@timestamp,observer.hostname,user.name,source.ip,destination.ip,destination.port,event.outcome,inferences,@rawstring], limit=max)
+      | match(file=corelight_inferences_description.csv, column=Code,field=inferences, include=Name)
+      | rename([["inferences","Inference"],[user.name, "User Name"],[observer.hostname,"Corelight Sensor"],[source.ip,"Source IP"],[destination.ip,"Destination IP"],[destination.port,"Destination Port"],[event.outcome,"Auth Success"],[@rawstring,"Raw Logs"], [Name, "Inference Name"]])
       | default(value="unknown", field=[@timestamp, "User Name","Corelight Sensor","Source IP","Destination IP","Destination Port","Inference","Inference Name","Auth Success","Raw Logs"])
       | formatTime(format="%F %r", as="Time")
       | select([Time, "User Name","Corelight Sensor","Source IP","Destination IP","Destination Port","Inference","Inference Name","Auth Success","Raw Logs"])
@@ -286,9 +285,9 @@ widgets:
       | #event.dataset = ndr.rdp
       | in(field=observer.hostname, values=[?system_name])
       | ?{additional_filter=*}
-      | top(field=["user.name",Vendor.auth_success],limit=20)
-      | default(value="no_value", field=[Vendor.auth_success,user.name])
-      | rename([[Vendor.auth_success,"Auth Success"],[user.name,"Connecting User"],[_count,Count]])
+      | top(field=["user.name",event.outcome],limit=20)
+      | default(value="no_value", field=[event.outcome,user.name])
+      | rename([[event.outcome,"Auth Success"],[user.name,"Connecting User"],[_count,Count]])
     end: now
     start: 1d
     width: 4
@@ -299,8 +298,8 @@ widgets:
         '{{ fields["Auth Success"] }}'
       queryString: "#Vendor = corelight and #event.module = ndr\n| #event.dataset\
         \ = ndr.rdp\n| in(field=observer.hostname, values=[?system_name])  \n| ?additional_filter\n\
-        | default(value=\"no_value\", field=[Vendor.auth_success])\n| Vendor.auth_success\
-        \ = ?auth_success AND user.name = ?user_name"
+        | default(value=\"no_value\", field=[event.outcome])\n| event.outcome = ?auth_success\
+        \ AND user.name = ?user_name"
       useWidgetTimeWindow: true
       arguments:
         additional_filter: '["{{ parameters.additional_filter }}"]'
@@ -346,4 +345,4 @@ parameters:
     defaultValue: '*'
     width: 1
     order: 1
-    valueField: sensor_name
+    valueField: observer.hostname
