@@ -142,7 +142,7 @@ widgets:
     width: 12
     title: Log hunting
     type: note
-$schema: https://schemas.humio.com/dashboard/v0.17.0
+$schema: https://schemas.humio.com/dashboard/v0.20.0
 parameters:
   additional_filter:
     label: Additional filter

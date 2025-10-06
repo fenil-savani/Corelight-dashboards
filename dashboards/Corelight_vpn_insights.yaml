@@ -351,7 +351,7 @@ widgets:
     title: Largest transfers between host pairs over vpn
     isLive: false
     type: query
-$schema: https://schemas.humio.com/dashboard/v0.17.0
+$schema: https://schemas.humio.com/dashboard/v0.20.0
 parameters:
   additional_filter:
     label: Additional filter
