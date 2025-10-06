@@ -334,6 +334,7 @@ widgets:
       type: searchlink
     options:
       xAxisTitle: Protocol/Port
+      barChartType: stacked
       yAxisTitle: Count
       maxSeriesCount: 10
       series: {}
