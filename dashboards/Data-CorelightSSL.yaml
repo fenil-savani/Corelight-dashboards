@@ -15,7 +15,12 @@ widgets:
     queryString: |-
       #Vendor = corelight and #event.module = ndr
       | in(field=#event.dataset, values = ["ndr.ssl", "ndr.ssl_red"])
-      | join(query={#Vendor = corelight and #event.module = ndr| in(field=#event.dataset, values=[ndr.conn, ndr.conn_long, ndr.conn_red])}, field=event.id, include=[network.direction], limit=max)
+      | join(query={#Vendor = corelight and #event.module = ndr
+                  | in(field=#event.dataset, values=[ndr.conn, ndr.conn_long, ndr.conn_red])
+                  },
+            field=event.id,
+            include=[network.direction],
+            limit=200000)
       | in(field=observer.hostname, values=[?system_name])
       | network.direction=?{direction=*} and ?{additional_filter=*}
       | "Subject ID" := coalesce([Vendor.subject, destination.address])
@@ -30,14 +35,13 @@ widgets:
     interactions:
     - name: Details of top certificate subjects
       titleTemplate: Details of {{ fields["Subject ID"] }}
-      queryString: |-
-        #Vendor = corelight and #event.module = ndr
-        | in(field=#event.dataset, values = ["ndr.ssl", "ndr.ssl_red"])
-        | join(query={#Vendor = corelight and #event.module = ndr| in(field=#event.dataset, values=[ndr.conn, ndr.conn_long, ndr.conn_red])}, field=event.id, include=[Vendor.local_orig, Vendor.local_resp, network.direction], limit=max)
-        | in(field=observer.hostname, values=[?system_name])
-        | network.direction=?direction and ?additional_filter
-        | c_id := coalesce([Vendor.subject, destination.address])
-        | c_id = ?c_id
+      queryString: "#Vendor = corelight and #event.module = ndr\n| in(field=#event.dataset,\
+        \ values = [\"ndr.ssl\", \"ndr.ssl_red\"])\n| join(query={#Vendor = corelight\
+        \ and #event.module = ndr\n            | in(field=#event.dataset, values=[ndr.conn,\
+        \ ndr.conn_long, ndr.conn_red])\n            }, \n      field=event.id, \n\
+        \      include=[network.direction], \n      limit=200000)\n| in(field=observer.hostname,\
+        \ values=[?system_name])\n| network.direction=?direction and ?additional_filter\n\
+        | c_id := coalesce([Vendor.subject, destination.address])\n| c_id = ?c_id"
       useWidgetTimeWindow: true
       arguments:
         additional_filter: '["{{ parameters.additional_filter }}"]'
@@ -61,7 +65,12 @@ widgets:
     queryString: |-
       #Vendor = corelight and #event.module = ndr
       | in(field=#event.dataset, values = ["ndr.ssl", "ndr.ssl_red"])
-      | join(query={#Vendor = corelight and #event.module = ndr| in(field=#event.dataset, values=[ndr.conn, ndr.conn_long, ndr.conn_red])}, field=event.id, include=[network.direction], limit=max)
+      | join(query={#Vendor = corelight and #event.module = ndr
+                  | in(field=#event.dataset, values=[ndr.conn, ndr.conn_long, ndr.conn_red])
+                  },
+            field=event.id,
+            include=[network.direction],
+            limit=200000)
       | in(field=observer.hostname, values=[?system_name])
       | ?{additional_filter=*}
       | network.direction=internal or network.direction=inbound
@@ -76,14 +85,13 @@ widgets:
     interactions:
     - name: Details of validation status
       titleTemplate: Details of {{ fields["Validation Status"] }}
-      queryString: |-
-        #Vendor = corelight and #event.module = ndr
-        | in(field=#event.dataset, values = ["ndr.ssl", "ndr.ssl_red"])
-        | join(query={#Vendor = corelight and #event.module = ndr| in(field=#event.dataset, values=[ndr.conn, ndr.conn_long, ndr.conn_red])}, field=event.id, include=[Vendor.local_orig, Vendor.local_resp, network.direction], limit=max)
-        | in(field=observer.hostname, values=[?system_name])
-        | ?additional_filter
-        | network.direction=internal or network.direction=inbound
-        | Vendor.validation_status=?validation_status
+      queryString: "#Vendor = corelight and #event.module = ndr\n| in(field=#event.dataset,\
+        \ values = [\"ndr.ssl\", \"ndr.ssl_red\"])\n| join(query={#Vendor = corelight\
+        \ and #event.module = ndr\n            | in(field=#event.dataset, values=[ndr.conn,\
+        \ ndr.conn_long, ndr.conn_red])\n            }, \n      field=event.id, \n\
+        \      include=[network.direction], \n      limit=200000)\n| in(field=observer.hostname,\
+        \ values=[?system_name])\n| ?additional_filter\n| network.direction=internal\
+        \ or network.direction=inbound\n| Vendor.validation_status=?validation_status"
       useWidgetTimeWindow: true
       arguments:
         additional_filter: '["{{ parameters.additional_filter }}"]'
@@ -106,7 +114,12 @@ widgets:
     queryString: |-
       #Vendor = corelight and #event.module = ndr
       | in(field=#event.dataset, values = ["ndr.ssl", "ndr.ssl_red"])
-      | join(query={#Vendor = corelight and #event.module = ndr| in(field=#event.dataset, values=[ndr.conn, ndr.conn_long, ndr.conn_red])}, field=event.id, include=[network.direction], limit=max)
+      | join(query={#Vendor = corelight and #event.module = ndr
+                  | in(field=#event.dataset, values=[ndr.conn, ndr.conn_long, ndr.conn_red])
+                  },
+            field=event.id,
+            include=[network.direction],
+            limit=200000)
       | in(field=observer.hostname, values=[?system_name])
       | network.direction=?{direction=*} and ?{additional_filter=*}
       | top([Vendor.cipher])
@@ -117,15 +130,16 @@ widgets:
     interactions:
     - name: Details of top ciphers
       titleTemplate: Details of {{ fields.Vendor.cipher }}
-      queryString: |-
-        #Vendor = corelight and #event.module = ndr
-        | in(field=#event.dataset, values = ["ndr.ssl", "ndr.ssl_red"])
-        | join(query={#Vendor = corelight and #event.module = ndr| in(field=#event.dataset, values=[ndr.conn, ndr.conn_long, ndr.conn_red])}, field=event.id, include=[Vendor.local_orig, Vendor.local_resp, network.direction], limit=max)
-        | in(field=observer.hostname, values=[?system_name])
-        | network.direction=?direction and ?additional_filter
-        | Vendor.cipher = ?cipher
-        | rename([[Vendor.subject, "SSL Subject"], [destination.address, "SSL Subject Common Name"], [Vendor.cipher, "SSL Cipher"], [network.direction, "Direction"]])
-        | select(["SSL Subject", "SSL Subject Common Name", "SSL Cipher", Direction])
+      queryString: "#Vendor = corelight and #event.module = ndr\n| in(field=#event.dataset,\
+        \ values = [\"ndr.ssl\", \"ndr.ssl_red\"])\n| join(query={#Vendor = corelight\
+        \ and #event.module = ndr\n            | in(field=#event.dataset, values=[ndr.conn,\
+        \ ndr.conn_long, ndr.conn_red])\n            }, \n      field=event.id, \n\
+        \      include=[network.direction], \n      limit=200000)\n| in(field=observer.hostname,\
+        \ values=[?system_name])\n| network.direction=?direction and ?additional_filter\n\
+        | Vendor.cipher = ?cipher\n| rename([[Vendor.subject, \"SSL Subject\"], [destination.address,\
+        \ \"SSL Subject Common Name\"], [Vendor.cipher, \"SSL Cipher\"], [network.direction,\
+        \ \"Direction\"]])\n| select([\"SSL Subject\", \"SSL Subject Common Name\"\
+        , \"SSL Cipher\", Direction])"
       useWidgetTimeWindow: true
       arguments:
         additional_filter: '["{{ parameters.additional_filter }}"]'
